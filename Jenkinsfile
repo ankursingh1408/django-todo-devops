@@ -2,13 +2,19 @@ pipeline {
     agent any
 
     stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/ankursingh1408/django-todo-devops.git'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t django-todo .'
             }
         }
 
-        stage('Deploy Container') {
+        stage('Run Container') {
             steps {
                 sh '''
                 docker stop django-todo || true
