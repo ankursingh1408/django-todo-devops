@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/ankursingh1408/django-todo-devops.git'
+                checkout scm
             }
         }
 
