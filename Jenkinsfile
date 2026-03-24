@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:24-dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -27,6 +22,24 @@ pipeline {
                 docker run -d -p 8000:8000 --name django-todo django-todo
                 '''
             }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                sleep 5
+                curl -f http://localhost:8000/loginn/ || exit 1
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+        failure {
+            echo 'Deployment failed! Check logs for details.'
         }
     }
 }
